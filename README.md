@@ -84,10 +84,6 @@ An Example Recipe:
 
 ## [Link to Initial Main Project File](app.mjs) 
 
-
-
-(__TODO__: create a skeleton Express application with a package.json, app.mjs, views folder, etc. ... and link to your initial app.mjs)
-
 ## Annotations / References Used
 
 1. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
