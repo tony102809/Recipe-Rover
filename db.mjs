@@ -1,7 +1,9 @@
+import './config.mjs'; 
+
 import mongoose from 'mongoose';
 
 // User Schema
-const user = new mongoose.Schema({
+const User = new mongoose.Schema({
   username: String,
   password: String,
   savedRecipes: [String],
@@ -9,19 +11,17 @@ const user = new mongoose.Schema({
 });
 
 // Recipe Schema
-const recipe = new mongoose.Schema({
+const Recipe = new mongoose.Schema({
   title: String,
   author: String,
-  ingredients: [
-    {
-      name: String,
-      quantity: String ,
-    },
-  ],
+  ingredients: String,
   instructions: String,
 });
 
+mongoose.model('User', User);
+mongoose.model('Recipe', Recipe);
 
-export const User = mongoose.model('User', user);
-export const Recipe = mongoose.model('Recipe', recipe);
 
+// Uncomment following line to debug value of database connectoin string
+// console.log(process.env.DSN)
+mongoose.connect(process.env.DSN)

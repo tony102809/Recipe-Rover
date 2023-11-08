@@ -1,0 +1,32 @@
+<form id="recipeForm" action="/recipes/add" method="post">
+  <label for="title">Recipe Title:</label>
+  <input type="text" id="title" name="title" required>
+  
+  <label for="ingredients">Ingredients:</label>
+  <input type="text" id="ingredients" name="ingredients" required>
+  
+  <label for="instructions">Instructions:</label>
+  <input type="text" id="instructions" name="instructions" required>
+  
+   <button type="submit" id="addRecipe">Add Recipe</button>
+</form>
+
+
+<table class="recipes-table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Ingredients</th>
+      <th>Instructions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each recipes}}
+    <tr>
+      <td>{{title}}</td>
+      <td>{{ingredients}}</td>
+      <td>{{instructions}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
