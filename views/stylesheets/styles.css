@@ -1,0 +1,17 @@
+/* stylesheets/styles.css */
+.recipesTable {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 15px;
+  }
+  
+  .recipesTable th, .recipesTable td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 15px;
+  }
+  
+  .recipesTable th {
+    background-color: #f2f2f2;
+  }
+  
