@@ -1,0 +1,26 @@
+<!-- welcome.hbs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Recipe Rover</title>
+</head>
+
+<body>
+  <div style="text-align: center; margin-top: 50px;">
+    <h1>Welcome to Recipe Rover, {{user.username}}!</h1>
+
+    <div style="position: absolute; top: 10px; right: 10px;">
+      <a href="/logout" style="text-decoration: none; color: red;">Logout</a>
+    </div>
+
+    <button onclick="location.href='/recipes/add';" style="padding: 10px 20px; font-size: 16px; margin-top: 20px;">Add a Recipe</button>
+    <button onclick="location.href='/my-recipes';" style="padding: 10px 20px; font-size: 16px; margin-top: 20px;">My Saved Recipes</button>
+  </div>
+</body>
+
+</html>

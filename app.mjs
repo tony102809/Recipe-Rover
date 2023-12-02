@@ -99,16 +99,37 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-// Handle login authentication
+// Update the successRedirect in the login route
 app.post('/login', passport.authenticate('local', {
-  successRedirect: '/recipes/add', // Redirect to the add recipe page on successful login
-  failureRedirect: '/',             // Redirect back to the login screen on failed login
+  successRedirect: '/welcome', // Redirect to the welcome page on successful login
+  failureRedirect: '/',        // Redirect back to the login screen on failed login
 }));
+
 
 
 //----------------------------------------
 
+//WELCOME ROUTE:::
+app.get('/welcome', isLoggedIn, async (req, res) => {
+  try {
+    const recipes = await Recipe.find({ author: req.user._id });
+    res.render('welcome', { user: req.user, recipes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
 
+//My Recipes Route:
+app.get('/my-recipes', isLoggedIn, async (req, res) => {
+  try {
+    const recipes = await Recipe.find({ author: req.user._id });
+    res.render('my-recipes', { recipes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
 
 
 app.post('/recipes/add', isLoggedIn, async (req, res) => {
@@ -126,7 +147,7 @@ app.post('/recipes/add', isLoggedIn, async (req, res) => {
     // Add the created recipe to the user's createdRecipes array
     req.user.createdRecipes.push(savedRecipe._id);
     await req.user.save();
-    res.redirect('/');
+    res.redirect('/welcome');
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -154,5 +175,13 @@ app.get('/recipes/add', isLoggedIn, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+//logging out:
+// Add the following route for logout
+app.get('/logout', (req, res) => {
+  //req.logout(); // Passport function to logout
+  res.redirect('/'); // Redirect to the login page after logout
+});
+
 
 app.listen(process.env.PORT || 3000);

@@ -1,11 +1,11 @@
 /* stylesheets/styles.css */
-.recipesTable {
+.recipes-table {
     border: 1px solid black;
     border-collapse: collapse;
     padding: 15px;
   }
   
-  .recipesTable th, .recipesTable td {
+  .recipes-table th, .recipesTable td {
     border: 1px solid black;
     border-collapse: collapse;
     padding: 15px;
@@ -13,5 +13,28 @@
   
   .recipesTable th {
     background-color: #f2f2f2;
+  }
+
+  #recipeForm {
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  #recipeForm label {
+    display: block;
+    margin-top: 10px;
+  }
+
+  #recipeForm input {
+    width: 80%; /* Adjust the width as needed */
+    padding: 10px;
+    margin-top: 5px;
+    box-sizing: border-box;
+  }
+
+  #addRecipe {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
   }
   
