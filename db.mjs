@@ -7,13 +7,13 @@ const User = new mongoose.Schema({
   username: String,
   password: String,
   savedRecipes: [String],
-  createdRecipes: [String],
+  createdRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }],
 });
 
 // Recipe Schema
 const Recipe = new mongoose.Schema({
   title: String,
-  author: String,
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   ingredients: String,
   instructions: String,
 });

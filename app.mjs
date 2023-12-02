@@ -111,28 +111,48 @@ app.post('/login', passport.authenticate('local', {
 
 
 
-app.post('/recipes/add', async (req, res) => {
+app.post('/recipes/add', isLoggedIn, async (req, res) => {
   const { title, ingredients, instructions } = req.body;
 
   const r = new Recipe({
     title,
     ingredients,
     instructions,
+    author: req.user._id, // Associate the recipe with the currently logged-in user
   });
 
-  r.save()
-    .then(savedRecipe => {
-      res.redirect('/');
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Server error');
-    });
+  try {
+    const savedRecipe = await r.save();
+    // Add the created recipe to the user's createdRecipes array
+    req.user.createdRecipes.push(savedRecipe._id);
+    await req.user.save();
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
 });
 
-app.get('/recipes/add', async (req, res) => {
-  const recipes = await Recipe.find();
-  res.render('recipe-create', { recipes });
+// ...
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  // Redirect to login with a flash message indicating the need to log in
+  req.flash('error', 'You need to log in to access this page');
+  res.redirect('/login');
+}
+
+app.get('/recipes/add', isLoggedIn, async (req, res) => {
+  try {
+    // Fetch only recipes associated with the logged-in user
+    const recipes = await Recipe.find({ author: req.user._id });
+    res.render('recipe-create', { recipes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
 });
 
 app.listen(process.env.PORT || 3000);
