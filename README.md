@@ -5,13 +5,13 @@ The content below is an example project proposal / requirements document. Replac
 # RecipeRover
 
 ## Overview
-RecipeRover is a web application designed to simplify meal planning and recipe discovery. It allows users to search for, save, and make their own recipes. With RecipeRover, you can keep track of your favorite dishes and discover new culinary delights. Whether you're a seasoned chef or a kitchen novice, RecipeRover has something for everyone.
+RecipeRover is a web application designed to simplify meal planning and recipe discovery. It allows users to come up with and save their own recipes. With RecipeRover, you can keep track of your favorite dishes and discover new culinary delights. Whether you're a seasoned chef or a kitchen novice, RecipeRover has something for everyone.
 
 ## Data Model
-RecipeRover stores information about Users, Recipes, and Comments:
+RecipeRover stores information about Users and the recipes they create. 
 
 * Users can save recipes and make their own.
-* Each recipe contains ingredients and instructions.
+* Each recipe contains a title, ingredients and instructions.
 
 An Example User:
 
@@ -19,7 +19,7 @@ An Example User:
 {
   username: "foodie123",
   hash: // a password hash,
-  savedRecipes: // an array of references to Recipe documents,
+  savedRecipes: // an array of references to Recipes,
   createdRecipes: // an array of references to Recipe documents
 }
 
@@ -31,11 +31,7 @@ An Example Recipe:
 {
   title: "Pasta Carbonara",
   author: // a reference to a User object,
-  ingredients: [
-    { name: "Spaghetti", quantity: "200g" },
-    { name: "Eggs", quantity: "2" },
-    // Other ingredients
-  ],
+  ingredients: "Pasta, sauce, water, etc."
   instructions: "Step by step guide on how to cook the dish",
 }
 
@@ -45,25 +41,23 @@ An Example Recipe:
 
 ## Wireframes
 
+/Login and Registration - Pages that helps users register and log in
+![Registration/Login](documentation/Login:Registration.JPG)
+
+/Homepage - page that users see upon logging in
+![welcome](documentation/HomeScreen.JPG)
+
 /recipe/create - page for creating a new recipe 
 
-![recipe create](documentation/recipe-create.png)
+![recipe create](documentation/recipe-create.JPG)
 
 /list - page for showing all of user's recipes
 
-![recipeLists](documentation/recipeLists.png)
+![recipeLists](documentation/recipeLists.JPG)
 
-/recipe/slug - page for showing specific recipe 
-
-![recipe-slug](documentation/recipe-slug.png)
-
-
-/otherRecipes - page for showing list of other people's recipes
-
-![otherRecipes] (documentation/otherRecipes.png)
 
 ## Site map
-/documentation/site-map.png
+![sitemap](documentation/site-map.JPG)
 
 ## User Stories or Use Cases
 
@@ -75,9 +69,9 @@ An Example Recipe:
 6. as a user, I can view other people's recipes
 
 ## Research Topics
-* (5 points) Integrate user authentication
-* (5 points) vue.js
-    * used vue.js as the frontend framework; it's a challenging library to learn, so I've assigned it 5 points
+* (5 points) Integrate user authentication with Passport.js (Prof. said this was okay)
+* (3 points) dotenv configuration
+
 
 10 points total out of 10 required points 
 
@@ -87,5 +81,4 @@ An Example Recipe:
 ## Annotations / References Used
 
 1. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
-2. [tutorial on vue.js](https://vuejs.org/v2/guide/) - (add link to source code that was based on this)
 

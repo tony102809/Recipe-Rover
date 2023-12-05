@@ -24,6 +24,8 @@ app.use(passport.session());
 const User = mongoose.model('User');
 const Recipe = mongoose.model('Recipe');
 
+//Passport.js authentication:::
+
 passport.use(new LocalStrategy(
   async (username, password, done) => {
     try {
@@ -58,7 +60,6 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-
 //Registering new users::
 app.get('/register', (req, res) => {
   res.render('register');
@@ -91,7 +92,6 @@ app.post('/register', async (req, res) => {
 });
 
 
-// Render the login screen when the root route is accessed
 app.get('/', (req, res) => {
   res.render('login');
 });
@@ -99,13 +99,10 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-// Update the successRedirect in the login route
 app.post('/login', passport.authenticate('local', {
-  successRedirect: '/welcome', // Redirect to the welcome page on successful login
-  failureRedirect: '/',        // Redirect back to the login screen on failed login
+  successRedirect: '/welcome', 
+  failureRedirect: '/',        
 }));
-
-
 
 //----------------------------------------
 
@@ -120,18 +117,41 @@ app.get('/welcome', isLoggedIn, async (req, res) => {
   }
 });
 
-//My Recipes Route:
+//FILTERING FUNCTIONALITY
+// Higher-order function for recipe filtering
+const filterRecipes = (ingredientsFilter, titleFilter) => {
+  return (recipe) => {
+    // Check for ingredients filter
+    const hasIngredients = !ingredientsFilter || recipe.ingredients.toLowerCase().includes(ingredientsFilter.toLowerCase());
+
+    // Check for title filter
+    const hasTitle = !titleFilter || recipe.title.toLowerCase().includes(titleFilter.toLowerCase());
+
+    // Return true only if both conditions are met
+    return hasIngredients && hasTitle;
+  };
+};
+
+// My Recipes Route
 app.get('/my-recipes', isLoggedIn, async (req, res) => {
   try {
-    const recipes = await Recipe.find({ author: req.user._id });
-    res.render('my-recipes', { recipes });
+    // Get filter parameters from query string
+    const { ingredientsFilter, titleFilter } = req.query;
+
+    // Fetch all recipes for the user
+    const allRecipes = await Recipe.find({ author: req.user._id });
+
+    // Use Array.prototype.filter with the higher-order function
+    const filteredRecipes = allRecipes.filter(filterRecipes(ingredientsFilter, titleFilter));
+
+    res.render('my-recipes', { recipes: filteredRecipes, ingredientsFilter, titleFilter });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
   }
 });
 
-
+//Adding new recipes::::
 app.post('/recipes/add', isLoggedIn, async (req, res) => {
   const { title, ingredients, instructions } = req.body;
 
@@ -139,12 +159,11 @@ app.post('/recipes/add', isLoggedIn, async (req, res) => {
     title,
     ingredients,
     instructions,
-    author: req.user._id, // Associate the recipe with the currently logged-in user
+    author: req.user._id, 
   });
 
   try {
     const savedRecipe = await r.save();
-    // Add the created recipe to the user's createdRecipes array
     req.user.createdRecipes.push(savedRecipe._id);
     await req.user.save();
     res.redirect('/welcome');
@@ -154,13 +173,10 @@ app.post('/recipes/add', isLoggedIn, async (req, res) => {
   }
 });
 
-// ...
-
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  // Redirect to login with a flash message indicating the need to log in
   req.flash('error', 'You need to log in to access this page');
   res.redirect('/login');
 }
@@ -176,10 +192,35 @@ app.get('/recipes/add', isLoggedIn, async (req, res) => {
   }
 });
 
+
+// DELETING RECIPES::::
+app.post('/recipes/delete/:recipeId', isLoggedIn, async (req, res) => {
+  const { recipeId } = req.params;
+
+  try {
+    const recipe = await Recipe.findById(recipeId);
+    if (recipe && recipe.author.equals(req.user._id)) {
+      const index = req.user.createdRecipes.indexOf(recipeId);
+      if (index !== -1) {
+        req.user.createdRecipes.splice(index, 1);
+        await req.user.save();
+      }
+
+      await Recipe.findByIdAndDelete(recipeId);
+    } else {
+      return res.status(404).send('Recipe not found or unauthorized');
+    }
+
+    // Users stay on the my-recipes page
+    res.redirect('/my-recipes');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
 //logging out:
-// Add the following route for logout
 app.get('/logout', (req, res) => {
-  //req.logout(); // Passport function to logout
   res.redirect('/'); // Redirect to the login page after logout
 });
 

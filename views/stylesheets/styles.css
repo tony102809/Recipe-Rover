@@ -1,4 +1,4 @@
-/* stylesheets/styles.css */
+
 .recipes-table {
     border: 1px solid black;
     border-collapse: collapse;
@@ -26,7 +26,7 @@
   }
 
   #recipeForm input {
-    width: 80%; /* Adjust the width as needed */
+    width: 80%; 
     padding: 10px;
     margin-top: 5px;
     box-sizing: border-box;
