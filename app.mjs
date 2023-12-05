@@ -6,6 +6,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import './db.mjs';
+import flash from 'connect-flash';
+
 
 const app = express();
 
@@ -20,6 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
+
 
 const User = mongoose.model('User');
 const Recipe = mongoose.model('Recipe');
@@ -221,8 +225,15 @@ app.post('/recipes/delete/:recipeId', isLoggedIn, async (req, res) => {
 
 //logging out:
 app.get('/logout', (req, res) => {
-  res.redirect('/'); // Redirect to the login page after logout
+  req.logout((err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Server error');
+    }
+    res.redirect('/');
+  });
 });
+
 
 
 app.listen(process.env.PORT || 3000);
